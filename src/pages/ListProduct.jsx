@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class ListProducts extends Component {
+export default class ListProducts extends Component {
   render() {
     return (
       <div>
-        Listagem de produtos... requisito 2
+        <p data-testid="home-initial-message">
+          Digite algum termo de pesquisa ou escolha uma categoria.
+        </p>
       </div>
     );
   }
 }
-
-export default ListProducts;
