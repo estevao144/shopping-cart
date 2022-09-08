@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import Cart from './pages/Cart';
+import ListProducts from './pages/ListProduct';
 
 export default class App extends Component {
   render() {
@@ -10,7 +11,8 @@ export default class App extends Component {
           <Link data-testid="shopping-cart-button" to="/Cart">Carrinho</Link>
         </header>
         <Switch>
-          <Route path="/Cart" component={ Cart } />
+          <Route exact path="/" component={ ListProducts } />
+          <Route exact path="/Cart" component={ Cart } />
         </Switch>
       </BrowserRouter>
     );
