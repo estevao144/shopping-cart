@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getCategories } from '../services/api';
+import { getCategories, getProductByName } from '../services/api';
 
 export default class ListProducts extends Component {
   constructor() {
@@ -7,6 +7,8 @@ export default class ListProducts extends Component {
 
     this.state = {
       categories: [],
+      products: {},
+      searchProducts: '',
     };
   }
 
@@ -17,14 +19,28 @@ export default class ListProducts extends Component {
     });
   }
 
+   controlInputProducts = ({ target:{value }}) => {
+    const { searchProducts } = this.state;
+    this.setState({ searchProducts: value})
+  }
+
+  requireProducts = async () => {
+    const { searchProducts } = this.state;
+    const dataApi = await getProductByName(searchProducts);
+    this.setState({ products: dataApi })
+  }
+
   render() {
-    const { categories } = this.state;
-    console.log(categories);
+    const { categories, products: { results } } = this.state;
     return (
       <div>
         <p data-testid="home-initial-message">
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
+        <label>
+          <input type="text" data-testid="query-input" onChange={this.controlInputProducts} name="searchProducts" />
+          <input type="button" data-testid="query-button" onClick={this.requireProducts}/>
+        </label>
         <div>
           <div>
             {categories.map((categorie) => (
@@ -44,15 +60,16 @@ export default class ListProducts extends Component {
               </label>
             ))}
           </div>
-
-          {/* <label htmlFor="categories">
-            <input
-              type="radio"
-              id=""
-              onClick=""
-              name="categories"
-            />
-          </label> */}
+        </div>
+        <div>
+          { results.length > 0 ? results.map((product) => (
+            <div>
+              {
+                product.name
+              }
+              <img src={product.image} alt={product.title} />
+              </div>
+          ) ) }
         </div>
       </div>
     );
