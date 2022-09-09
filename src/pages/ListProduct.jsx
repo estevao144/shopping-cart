@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { getCategories, getProductByName } from '../services/api';
+import { getCategories, getProductByName,
+  getProductsFromCategoryAndQuery } from '../services/api';
 
 export default class ListProducts extends Component {
   constructor() {
@@ -9,23 +10,51 @@ export default class ListProducts extends Component {
       categories: [],
       products: {},
       searchProducts: '',
+      selectCategorieID: '',
+      selectCategorieName: '',
     };
   }
 
   async componentDidMount() {
     const responseCategories = await getCategories();
+    const dataApi = await getProductsFromCategoryAndQuery(
+      null,
+      null,
+    );
     this.setState({
       categories: responseCategories,
+      products: dataApi,
     });
   }
 
   controlInputProducts = ({ target: { value } }) => {
-    this.setState({ searchProducts: value });
+    this.setState({
+      searchProducts: value,
+    });
+  };
+
+  controlInputCategory = async ({ target: { value, id } }) => {
+    const { selectCategorieID, selectCategorieName } = this.state;
+    // Com o await o vetor retorna com os produtos, pq? eu não sei!
+    await this.setState({
+      selectCategorieID: id,
+      selectCategorieName: value,
+    });
+    this.requireCategory(selectCategorieID, selectCategorieName);
   };
 
   requireProducts = async () => {
     const { searchProducts } = this.state;
     const dataApi = await getProductByName(searchProducts);
+    this.setState({ products: dataApi });
+  };
+
+  requireCategory = async () => {
+    const { selectCategorieID, selectCategorieName } = this.state;
+    const dataApi = await getProductsFromCategoryAndQuery(
+      selectCategorieID,
+      selectCategorieName,
+    );
     this.setState({ products: dataApi });
     console.log(dataApi);
   };
@@ -62,9 +91,10 @@ export default class ListProducts extends Component {
                 <input
                   // key={ categorie.id }
                   type="radio"
-                  id={ categorie.name }
-                  // onClick=""
+                  id={ categorie.id }
+                  onChange={ this.controlInputCategory }
                   name="categories"
+                  value={ categorie.name }
                 />
               </label>
             ))}
