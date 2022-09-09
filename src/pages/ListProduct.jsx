@@ -10,14 +10,20 @@ export default class ListProducts extends Component {
       categories: [],
       products: {},
       searchProducts: '',
-      selectCategorie: '',
+      selectCategorieID: '',
+      selectCategorieName: '',
     };
   }
 
   async componentDidMount() {
     const responseCategories = await getCategories();
+    const dataApi = await getProductsFromCategoryAndQuery(
+      null,
+      null,
+    );
     this.setState({
       categories: responseCategories,
+      products: dataApi,
     });
   }
 
@@ -27,22 +33,28 @@ export default class ListProducts extends Component {
     });
   };
 
-  controlInputCategory = ({ target: { value } }) => {
-    this.setState({
-      selectCategorie: value,
+  controlInputCategory = async ({ target: { value, id } }) => {
+    const { selectCategorieID, selectCategorieName } = this.state;
+    // Com o await o vetor retorna com os produtos, pq? eu não sei!
+    await this.setState({
+      selectCategorieID: id,
+      selectCategorieName: value,
     });
+    this.requireCategory(selectCategorieID, selectCategorieName);
   };
 
   requireProducts = async () => {
     const { searchProducts } = this.state;
     const dataApi = await getProductByName(searchProducts);
     this.setState({ products: dataApi });
-    console.log(dataApi);
   };
 
   requireCategory = async () => {
-    const { selectCategorie } = this.state;
-    const dataApi = await getProductsFromCategoryAndQuery(selectCategorie);
+    const { selectCategorieID, selectCategorieName } = this.state;
+    const dataApi = await getProductsFromCategoryAndQuery(
+      selectCategorieID,
+      selectCategorieName,
+    );
     this.setState({ products: dataApi });
     console.log(dataApi);
   };
@@ -80,9 +92,9 @@ export default class ListProducts extends Component {
                   // key={ categorie.id }
                   type="radio"
                   id={ categorie.id }
-                  onClick={ this.controlInputCategory }
+                  onChange={ this.controlInputCategory }
                   name="categories"
-                  value={ categorie.id }
+                  value={ categorie.name }
                 />
               </label>
             ))}
