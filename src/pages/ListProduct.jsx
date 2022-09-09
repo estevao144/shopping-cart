@@ -27,6 +27,7 @@ export default class ListProducts extends Component {
     const { searchProducts } = this.state;
     const dataApi = await getProductByName(searchProducts);
     this.setState({ products: dataApi });
+    console.log(dataApi);
   };
 
   render() {
@@ -70,8 +71,8 @@ export default class ListProducts extends Component {
           </div>
         </div>
         <div>
-          { results.length > 0 ? results.map(({ id, title, thumbnail, price }) => (
-            <div key={ id } datatestid="product">
+          { results !== undefined ? results.map(({ id, title, thumbnail, price }) => (
+            <div key={ id } data-testid="product">
               {title}
               <img src={ thumbnail } alt={ title } />
               {price}
