@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { getCategories, getProductByName } from '../services/api';
+import { getCategories, getProductByName,
+  getProductsFromCategoryAndQuery } from '../services/api';
 
 export default class ListProducts extends Component {
   constructor() {
@@ -9,6 +10,7 @@ export default class ListProducts extends Component {
       categories: [],
       products: {},
       searchProducts: '',
+      selectCategorie: '',
     };
   }
 
@@ -20,12 +22,27 @@ export default class ListProducts extends Component {
   }
 
   controlInputProducts = ({ target: { value } }) => {
-    this.setState({ searchProducts: value });
+    this.setState({
+      searchProducts: value,
+    });
+  };
+
+  controlInputCategory = ({ target: { value } }) => {
+    this.setState({
+      selectCategorie: value,
+    });
   };
 
   requireProducts = async () => {
     const { searchProducts } = this.state;
     const dataApi = await getProductByName(searchProducts);
+    this.setState({ products: dataApi });
+    console.log(dataApi);
+  };
+
+  requireCategory = async () => {
+    const { selectCategorie } = this.state;
+    const dataApi = await getProductsFromCategoryAndQuery(selectCategorie);
     this.setState({ products: dataApi });
     console.log(dataApi);
   };
@@ -62,9 +79,10 @@ export default class ListProducts extends Component {
                 <input
                   // key={ categorie.id }
                   type="radio"
-                  id={ categorie.name }
-                  // onClick=""
+                  id={ categorie.id }
+                  onClick={ this.controlInputCategory }
                   name="categories"
+                  value={ categorie.id }
                 />
               </label>
             ))}
