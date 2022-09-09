@@ -21,3 +21,10 @@ export async function getProductById(id) {
   const retornaJson = await retornaAPI.json();
   return retornaJson;
 }
+
+export async function getProductByName(name) {
+  // Implemente aqui
+  const retornaAPI = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${name}`);
+  const retornaJson = await retornaAPI.json();
+  return retornaJson;
+}
