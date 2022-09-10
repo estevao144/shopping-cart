@@ -9,11 +9,11 @@ export default class App extends Component {
     return (
       <BrowserRouter>
         <header>
-          <Link data-testid="shopping-cart-button" to="/cart">Carrinho</Link>
+          <Link data-testid="shopping-cart-button" to="/Cart">Carrinho</Link>
         </header>
         <Switch>
           <Route exact path="/" component={ ListProducts } />
-          <Route exact path="/cart" render={ (props) => <Cart { ...props } /> } />
+          <Route exact path="/Cart" component={ Cart } />
         </Switch>
       </BrowserRouter>
     );
