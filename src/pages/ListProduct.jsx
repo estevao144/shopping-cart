@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import BtnAddCart from '../component/BtnAddCart';
 import { getCategories, getProductByName,
   getProductsFromCategoryAndQuery } from '../services/api';
 
@@ -101,11 +102,12 @@ export default class ListProducts extends Component {
           </div>
         </div>
         <div>
-          { results !== undefined ? results.map(({ id, title, thumbnail, price }) => (
-            <div key={ id } data-testid="product">
-              {title}
-              <img src={ thumbnail } alt={ title } />
-              {price}
+          { results !== undefined ? results.map((product) => (
+            <div key={ product.id } data-testid="product">
+              {product.title}
+              <img src={ product.thumbnail } alt={ product.title } />
+              {product.price}
+              <BtnAddCart product={ product } />
             </div>
           )) : <span>Nenhum produto foi encontrado</span>}
         </div>
